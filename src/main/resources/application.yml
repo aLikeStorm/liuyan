@@ -1,0 +1,32 @@
+
+logging:
+  level:
+    com.example : debug
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/liuyan?useSSL=false&serverTimezone=UTC
+    username: root
+    password: aks123456
+    type: com.zaxxer.hikari.HikariDataSource
+  mail:
+    # JavaMailSender \u90AE\u4EF6\u53D1\u9001\u7684\u914D\u7F6E
+    host: smtp.qq.com
+    username: 2039323538@qq.com
+    #QQ\u90AE\u7BB1\u7684\u6388\u6743\u7801
+    password: ssbnoynrapzlbghf
+    protocol: smtp
+    default-encoding: UTF-8
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+server:
+  port: 8081

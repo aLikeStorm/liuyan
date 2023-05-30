@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎注册</title>
+    <link href="./css/register.css" rel="stylesheet">
+    <link rel="stylesheet" href="./res/elementui/index.css">
+    <!-- 引入组件库 -->
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios-0.18.0.js"></script>
+    <script src="./plugins/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="./plugins/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+
+<div class="form-div" id="app">
+    <div class="reg-content">
+        <h1>欢迎注册</h1>
+        <span>已有帐号？</span> <a href="login.html">登录</a>
+    </div>
+    <form id="reg-form" action="#" method="get">
+
+        <table>
+
+            <tr>
+                <td>邮箱</td>
+                <td class="inputs">
+                    <input v-model="user.email" type="text" id="studentID">
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td>账号</td>
+                <td class="inputs">
+                    <input v-model="user.username" type="text" id="username">
+                    <br>
+                </td>
+
+            </tr>
+
+            <tr>
+                <td>密码</td>
+                <td class="inputs">
+                    <input v-model="user.password" type="password" id="password">
+                    <br>
+                </td>
+            </tr>
+        </table>
+        <div class="buttons">
+            <input value="注 册" type="button" @click="register_self" id="reg_btn">
+        </div>
+        <br class="clear">
+    </form>
+
+</div>
+
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            user:{
+                username:"",
+                password:"",
+                email:""
+            }
+        },
+        methods:{
+            register_self(){//发送注册请求
+                let that = this;
+                axios.post("/user/register",that.user).then(
+                    function (res){
+                        if (res.data.success){
+                            that.$message({
+                                type:"success",
+                                message:"注册成功，请跳转到登陆页面!"
+                            });
+                        }else {
+                            that.$message.error(res.data.errorMsg);
+                        }
+                    }
+                )
+            }
+        }
+
+
+    })
+</script>
+
+</body>
+</html>

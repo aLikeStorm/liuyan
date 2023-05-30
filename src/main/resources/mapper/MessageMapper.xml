@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.liuyan.mapper.MessageMapper">
+    <insert id="insertMessage"  parameterType="com.example.liuyan.entity.pojo.Message"
+    useGeneratedKeys="true" keyProperty="id"
+    >
+        INSERT INTO tb_message(message, uid, createdate, views,state,topic) VALUES
+                            (#{message}, #{uid}, #{createdate},0,#{state}, #{topic});
+    </insert>
+
+    <delete id="deleteReply">
+        DELETE FROM tb_message WHERE id in (SELECT rid FROM tb_reply WHERE mid = #{id})
+    </delete>
+
+    <select id="findAllMessageOutlineByUser" parameterType="string" resultType="com.example.liuyan.entity.dto.MessageOutlineDTO">
+        SELECT topic,username,m.id as mid,u.id as uid,views,m.createdate as lastUpdateTime
+        FROM tb_message m,tb_user u WHERE m.state=0 and uid=u.id
+        <if test="username != null and username != ''">
+            and u.username like concat('%',#{username},'%')
+        </if>
+        ORDER BY m.createdate DESC
+        ;
+    </select>
+    <select id="findAllMessageOutlineByTopic" resultType="com.example.liuyan.entity.dto.MessageOutlineDTO">
+        SELECT topic,username,m.id as mid,u.id as uid,views,m.createdate as lastUpdateTime
+        FROM tb_message m,tb_user u WHERE m.state=0 and uid=u.id
+        <if test="topic != null and topic != ''">
+            and topic like concat('%',#{topic},'%')
+        </if>
+        ORDER BY m.createdate DESC
+        ;
+    </select>
+    <select id="findReply" resultType="com.example.liuyan.entity.dto.MessageAndUserDTO">
+        SELECT
+            m.id as id,m.createdate as createdate,message,uid,topic,views,m.state as state,u.username as username,email,u.role as role
+            FROM tb_message m,tb_user u WHERE u.id = uid AND m.id IN
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        ORDER BY views DESC;
+    </select>
+    <select id="findMessageId" parameterType="com.example.liuyan.entity.pojo.Message" resultType="java.lang.Integer">
+        SELECT id FROM tb_message WHERE topic=#{topic} AND createdate=#{createdate,jdbcType=DATETIMEOFFSET};
+    </select>
+
+</mapper>

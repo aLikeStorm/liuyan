@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>留言面板</title>
+    <!-- 引入组件库 -->
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../plugins/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../plugins/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+{{messageDetailList}}
+</div>
+</body>
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data:{
+            messageDetailList:{
+                message:null,
+                replyList:[]
+            }
+        },
+
+        //钩子函数，VUE对象初始化完成后自动执行
+        created() {
+            this.findDetail()
+        },
+
+        methods: {
+            findDetail(){
+                const that = this;
+                const mid = sessionStorage.getItem("mid"); // 取
+                sessionStorage.setItem("mid",null);
+                axios.get("/message/findMessageDetail/"+mid).then(function (res){
+                    if (res.data.success){
+                        that.messageDetailList = res.data.data;
+                        console.log(that.messageDetailList)
+                    }else {
+                        that.$message.error(res.data.errorMsg);
+                    }
+                })
+            },
+        }
+    })
+</script>
+</html>

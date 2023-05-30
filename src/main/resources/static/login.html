@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link href="./css/login.css" rel="stylesheet">
+    <!-- 引入组件库 -->
+    <link rel="stylesheet" href="./res/elementui/index.css">
+    <!-- 引入组件库 -->
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios-0.18.0.js"></script>
+    <script src="./plugins/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="./plugins/element-ui/lib/theme-chalk/index.css">
+
+</head>
+
+<body>
+<div id="loginDiv" style="height: 350px">
+    <form action="" id="form">
+        <h1 id="loginMsg">LOGIN IN</h1>
+        <p>账号:<input v-model="username"  type="text"></p>
+
+        <p>密码:<input v-model="password" type="password"></p>
+        <div id="subDiv">
+            <input type="button" value="登陆" class="button" @click="login">
+            <a href="/pages/register.html">没有账号？</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    new Vue({
+        el:"#loginDiv",
+        data:{
+            username:"",
+            password:""
+        },
+        methods:{
+            login(){
+                that = this;
+                axios.post("/user/login",{"username":that.username,"password":that.password}).then(
+                    function (res){
+                        if (res.data.data.role == 1){ //管理员界面
+                            window.location.href = "administrator.html";
+                        }else if (res.data.data.role == 0) { //普通用户界面
+                            window.location.href = "index.html";
+                        }else {
+                            that.$message.error(res.data.errorMsg);
+                        }
+                    }
+
+                )
+            }
+
+
+        }
+
+    })
+
+
+</script>
+
+</body>
+</html>
